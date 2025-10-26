@@ -1,6 +1,7 @@
 #include "breakout.h"
 #include "display.h"
 #include "input.h"
+#include "sound.h"
 
 BreakoutGame breakoutGame;
 
@@ -44,6 +45,7 @@ void BreakoutGame::update() {
   // Check lose condition
   if (lives <= 0) {
     gameOver = true;
+    sound.gameOver();
   }
 }
 
@@ -102,6 +104,7 @@ void BreakoutGame::updateBall() {
   if (ball.y >= SCREEN_HEIGHT) {
     lives--;
     if (lives > 0) {
+      sound.newGame();
       resetBall();
     }
     return;
@@ -109,6 +112,7 @@ void BreakoutGame::updateBall() {
   
   // Paddle collision
   if (checkBallPaddleCollision()) {
+    sound.click();
     ball.velY = -abs(ball.velY); // Always bounce upward
     
     // Add horizontal velocity based on where ball hits paddle
@@ -153,6 +157,7 @@ bool BreakoutGame::checkBallBrickCollision() {
           ball.y <= brickY + BRICK_HEIGHT) {
         
         // Remove brick
+        sound.point();
         bricks[row][col] = false;
         score += (BRICK_ROWS - row) * 10; // Higher rows worth more points
         

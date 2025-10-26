@@ -126,12 +126,15 @@ void GameManager::setState(GameState newState) {
   
   switch (newState) {
     case STATE_MENU:
+      sound.newGame();
       showMenu();
       break;
     case STATE_GAME_OVER:
+      sound.gameOver();
       showGameOver();
       break;
     case STATE_GAME_WON:
+      sound.gameWon();
       showGameWon();
       break;
   }
@@ -229,6 +232,8 @@ void GameManager::showMenu() {
 void GameManager::handleMenuInput() {
   if (buttons.upPressed) {
     menuSelection = (menuSelection - 1 + MAX_GAMES) % MAX_GAMES;
+
+    sound.playTone(440, 50);
     
     // Adjust scroll for wrap-around
     if (menuSelection == MAX_GAMES - 1) {
@@ -243,6 +248,8 @@ void GameManager::handleMenuInput() {
   }
   else if (buttons.downPressed) {
     menuSelection = (menuSelection + 1) % MAX_GAMES;
+
+    sound.playTone(440, 50);
     
     // Adjust scroll for wrap-around
     if (menuSelection == 0) {
@@ -256,6 +263,7 @@ void GameManager::handleMenuInput() {
     showMenu();
   }
   else if (buttons.rightPressed) {
+    sound.playTone(880, 80);
     setGame(menuSelection);
   }
 }

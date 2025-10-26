@@ -1,6 +1,7 @@
 #include "game2048.h"
 #include "display.h"
 #include "input.h"
+#include "sound.h"
 
 Game2048 game2048;
 
@@ -31,6 +32,7 @@ void Game2048::update() {
     
     if (!canMove()) {
       gameOver = true;
+      sound.explosion();
     }
   }
 }
@@ -64,15 +66,19 @@ void Game2048::draw() {
 
 void Game2048::handleInput() {
   if (buttons.leftPressed) {
+    sound.move();
     moveLeft();
   }
   else if (buttons.rightPressed) {
+    sound.move();
     moveRight();
   }
   else if (buttons.upPressed) {
+    sound.move();
     moveUp();
   }
   else if (buttons.downPressed) {
+    sound.move();
     moveDown();
   }
 }
@@ -227,6 +233,7 @@ bool Game2048::mergeLine(int line[], int size) {
       line[i + 1] = 0;
       score += line[i];
       moved = true;
+      sound.point();
       
       // Check for win condition
       if (line[i] == 2048) {

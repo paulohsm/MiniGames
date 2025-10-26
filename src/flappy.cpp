@@ -1,6 +1,7 @@
 #include "flappy.h"
 #include "display.h"
 #include "input.h"
+#include "sound.h"
 
 FlappyGame flappyGame;
 
@@ -41,6 +42,7 @@ void FlappyGame::update() {
   updatePipes();
   
   if (checkCollisions()) {
+    sound.explosion();
     gameOver = true;
   }
   
@@ -70,6 +72,7 @@ void FlappyGame::draw() {
 void FlappyGame::handleInput() {
   if (buttons.upPressed || buttons.rightPressed) {
     bird.velocity = jumpStrength;
+    sound.move();
   }
 }
 
@@ -105,6 +108,7 @@ void FlappyGame::updatePipes() {
       // Check if bird passed pipe
       if (!pipes[i].passed && pipes[i].x + PIPE_WIDTH < bird.x) {
         pipes[i].passed = true;
+        sound.point();
         score++;
         
         // Increase game speed slightly

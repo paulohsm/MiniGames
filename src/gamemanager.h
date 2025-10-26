@@ -2,6 +2,7 @@
 #define GAMEMANAGER_H
 
 #include "config.h"
+#include "sound.h"
 #include "snake.h"
 #include "tetris.h"
 #include "flappy.h"

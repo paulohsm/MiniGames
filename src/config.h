@@ -5,25 +5,31 @@
 #include <Wire.h>
 #include <Adafruit_GFX.h>
 #include <Adafruit_SSD1306.h>
+#include <Adafruit_SH110X.h>
 #include <EEPROM.h>
 #include <Ethnocentric_Rg_It5pt7b.h>
 
 
 // Button Pins
-#define PIN_BUTTON_UP 4
-#define PIN_BUTTON_DOWN 5
-#define PIN_BUTTON_LEFT 15
-#define PIN_BUTTON_RIGHT 18
+#define PIN_BUTTON_UP 5 //4
+#define PIN_BUTTON_DOWN 22 //5
+#define PIN_BUTTON_LEFT 4 //15
+#define PIN_BUTTON_RIGHT 21 //18
 
 // Display Pins
-#define PIN_SCL 22
-#define PIN_SDA 21
+#define PIN_SCL 27 //22
+#define PIN_SDA 26 //21
 
 // Display Setup
 #define SCREEN_WIDTH 128
 #define SCREEN_HEIGHT 64
 #define OLED_RESET -1
 #define SCREEN_ADDRESS 0x3C
+
+// Sound Setup
+#define PIN_BUZZER 25 //13
+#define BUZZER_CHANNEL LEDC_CHANNEL_0
+#define BUZZER_RESOLUTION 8
 
 // Game Constants
 #define MAX_GAMES 8
@@ -50,6 +56,9 @@ enum GameState {
 };
 
 // Global display object
-extern Adafruit_SSD1306 display;
+//extern Adafruit_SSD1306 display;
+//Adafruit_SH1106 display(OLED_RESET);
+//Adafruit_SH1106G display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, OLED_RESET);
+extern Adafruit_SH1106G display;
 
 #endif
