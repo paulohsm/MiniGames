@@ -1,6 +1,7 @@
 #include "pacman.h"
 #include "display.h"
 #include "input.h"
+#include "sound.h"
 
 PacManGame pacmanGame;
 
@@ -16,42 +17,19 @@ const uint8_t mazeLayout[MAZE_HEIGHT][MAZE_WIDTH] = {
   {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0}
 };
 
+const int MIN_MOVE_DELAY = 50;
+
 void PacManGame::init() {
-  generateMaze();
-  
-  // Find Pac-Man and ghost start positions
-  for (int y = 0; y < MAZE_HEIGHT; y++) {
-    for (int x = 0; x < MAZE_WIDTH; x++) {
-      if (mazeLayout[y][x] == 3) { // Pac-Man start
-        pacman.x = x;
-        pacman.y = y;
-        pacman.direction = 0;
-        pacman.nextDirection = 0;
-        maze[y][x] = 2; // Empty space
-      }
-      else if (mazeLayout[y][x] == 4) { // Ghost start
-        for (int i = 0; i < MAX_GHOSTS; i++) {
-          if (!ghosts[i].active) {
-            ghosts[i].x = x;
-            ghosts[i].y = y;
-            ghosts[i].direction = random(0, 4);
-            ghosts[i].active = true;
-            ghosts[i].lastMove = 0;
-            maze[y][x] = 2; // Empty space
-            break;
-          }
-        }
-      }
-    }
-  }
-  
+  // Apenas inicializa variáveis estáticas/globais
   score = 0;
-  dotsEaten = 0;
   gameOver = false;
   gameWon = false;
-  lastMove = 0;
-  lastGhostMove = 0;
-  moveDelay = 300;
+  
+  // Define o atraso inicial
+  moveDelay = 305; 
+
+  // Inicia o jogo no nível 1
+  nextLevel(); 
 }
 
 void PacManGame::update() {
@@ -78,8 +56,10 @@ void PacManGame::update() {
   
   // Check win condition
   if (dotsEaten >= TOTAL_DOTS) {
+    sound.gameWon();
     gameWon = true;
-    gameOver = true;
+    //gameOver = true;
+    nextLevel();
   }
 }
 
@@ -96,15 +76,19 @@ void PacManGame::draw() {
 
 void PacManGame::handleInput() {
   if (buttons.upPressed) {
+    sound.move();
     pacman.nextDirection = 3;
   }
   else if (buttons.downPressed) {
+    sound.move();
     pacman.nextDirection = 1;
   }
   else if (buttons.leftPressed) {
+    sound.move();
     pacman.nextDirection = 2;
   }
   else if (buttons.rightPressed) {
+    sound.move();
     pacman.nextDirection = 0;
   }
 }
@@ -121,9 +105,45 @@ void PacManGame::generateMaze() {
   }
   
   // Reset ghosts
-  for (int i = 0; i < MAX_GHOSTS; i++) {
-    ghosts[i].active = false;
+  //for (int i = 0; i < MAX_GHOSTS; i++) {
+  //  ghosts[i].active = false;
+  //}
+}
+
+void PacManGame::nextLevel() {
+  if (moveDelay > MIN_MOVE_DELAY) {
+    moveDelay -= 5;
   }
+  generateMaze();
+
+  for (int y = 0; y < MAZE_HEIGHT; y++) {
+    for (int x = 0; x < MAZE_WIDTH; x++) {
+      if (mazeLayout[y][x] == 3) { 
+        pacman.x = x;
+        pacman.y = y;
+        pacman.direction = 0;
+        pacman.nextDirection = 0;
+      }
+      else if (mazeLayout[y][x] == 4) { 
+        for (int i = 0; i < MAX_GHOSTS; i++) {
+          //if (ghosts[i].active) {
+          if (i == 0) {
+            ghosts[i].x = x;
+            ghosts[i].y = y;
+            ghosts[i].direction = random(0, 4); 
+            ghosts[i].active = true;
+            ghosts[i].lastMove = 0;
+            break; 
+          }
+        }
+      }
+    }
+  }
+
+  gameWon = false; 
+  unsigned long currentTime = millis();
+  lastMove = currentTime;
+  lastGhostMove = currentTime;
 }
 
 void PacManGame::updatePacMan() {
@@ -157,7 +177,8 @@ void PacManGame::updatePacMan() {
     // Eat dot
     if (maze[pacman.y][pacman.x] == 1) {
       maze[pacman.y][pacman.x] = 2;
-      score += 10;
+      sound.score();
+      score += 1;
       dotsEaten++;
     }
   }

@@ -36,6 +36,7 @@ private:
   int moveDelay;
   
   void generateMaze();
+  void nextLevel();
   void updatePacMan();
   void updateGhosts();
   bool isValidMove(int x, int y);

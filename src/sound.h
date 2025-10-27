@@ -35,6 +35,10 @@ class Sound {
     playTone(330, 40);
   };
 
+  void score(){
+    playTone(330, 40);
+  };
+
   void newGame(){
     playTone(523, 30);
   };
