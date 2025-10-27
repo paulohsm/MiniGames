@@ -17,6 +17,7 @@ const uint8_t mazeLayout[MAZE_HEIGHT][MAZE_WIDTH] = {
   {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0}
 };
 
+const int Y_OFFSET = -4;
 const int MIN_MOVE_DELAY = 50;
 
 void PacManGame::init() {
@@ -264,7 +265,7 @@ void PacManGame::drawMaze() {
   for (int y = 0; y < MAZE_HEIGHT; y++) {
     for (int x = 0; x < MAZE_WIDTH; x++) {
       int screenX = x * CELL_SIZE;
-      int screenY = y * CELL_SIZE;
+      int screenY = y * CELL_SIZE + Y_OFFSET;
       
       if (maze[y][x] == 0) { // Wall
         display.fillRect(screenX, screenY, CELL_SIZE, CELL_SIZE, SSD1306_WHITE);
@@ -278,7 +279,7 @@ void PacManGame::drawMaze() {
 
 void PacManGame::drawPacMan() {
   int screenX = pacman.x * CELL_SIZE + CELL_SIZE/2;
-  int screenY = pacman.y * CELL_SIZE + CELL_SIZE/2;
+  int screenY = pacman.y * CELL_SIZE + CELL_SIZE/2 + Y_OFFSET;
   
   display.fillCircle(screenX, screenY, 3, SSD1306_WHITE);
   
@@ -307,7 +308,7 @@ void PacManGame::drawGhosts() {
   for (int i = 0; i < MAX_GHOSTS; i++) {
     if (ghosts[i].active) {
       int screenX = ghosts[i].x * CELL_SIZE + CELL_SIZE/2;
-      int screenY = ghosts[i].y * CELL_SIZE + CELL_SIZE/2;
+      int screenY = ghosts[i].y * CELL_SIZE + CELL_SIZE/2 + Y_OFFSET;
       
       // Draw ghost body
       display.fillCircle(screenX, screenY - 1, 3, SSD1306_WHITE);
@@ -326,16 +327,19 @@ void PacManGame::drawGhosts() {
 }
 
 void PacManGame::drawUI() {
+  int scoreY = SCREEN_HEIGHT - 8;
+  display.fillRect(0, scoreY, SCREEN_WIDTH, 8, SSD1306_BLACK);
+
   display.setTextSize(1);
   display.setTextColor(SSD1306_WHITE);
   
   // Score (bottom area)
-  display.setCursor(0, SCREEN_HEIGHT - 8);
+  display.setCursor(0, scoreY);
   display.print(F("Score: "));
   display.print(score);
   
   // Dots remaining
-  display.setCursor(70, SCREEN_HEIGHT - 8);
+  display.setCursor(70, scoreY);
   display.print(F("Dots: "));
   display.print(TOTAL_DOTS - dotsEaten);
 }
