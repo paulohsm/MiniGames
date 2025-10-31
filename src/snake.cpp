@@ -1,6 +1,7 @@
 #include "snake.h"
 #include "display.h"
 #include "input.h"
+#include "sound.h"
 
 SnakeGame snakeGame;
 
@@ -78,18 +79,22 @@ void SnakeGame::handleInput() {
   int newDirection = nextDirection;
   
   if (buttons.upPressed && newDirection != 1) {
+    sound.move();
     nextDirection = 3;
     directionChanged = true;
   }
   else if (buttons.downPressed && newDirection != 3) {
+    sound.move();
     nextDirection = 1;
     directionChanged = true;
   }
   else if (buttons.leftPressed && newDirection != 0) {
+    sound.move();
     nextDirection = 2;
     directionChanged = true;
   }
   else if (buttons.rightPressed && newDirection != 2) {
+    sound.move();
     nextDirection = 0;
     directionChanged = true;
   }
@@ -147,6 +152,7 @@ bool SnakeGame::checkCollisions() {
   
   // Food collision
   if (head.x == food.x && head.y == food.y) {
+    sound.score();
     score++;
     snakeLength++;
     

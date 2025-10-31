@@ -1,6 +1,7 @@
 #include "tetris.h"
 #include "display.h"
 #include "input.h"
+#include "sound.h"
 
 TetrisGame tetrisGame;
 
@@ -133,15 +134,19 @@ void TetrisGame::draw() {
 
 void TetrisGame::handleInput() {
   if (buttons.leftPressed) {
+    sound.move();
     movePiece(-1, 0, 0);
   }
   else if (buttons.rightPressed) {
+    sound.move();
     movePiece(1, 0, 0);
   }
   else if (buttons.downPressed) {
+    sound.move();
     movePiece(0, 1, 0);
   }
   else if (buttons.upPressed) {
+    sound.move();
     movePiece(0, 0, 1);
   }
 }
@@ -231,11 +236,13 @@ void TetrisGame::clearLines() {
   }
   
   if (linesClearedNow > 0) {
+    sound.score();
     score += linesClearedNow * 100 * level;
     linesCleared += linesClearedNow;
     
     // Increase level every 10 lines
     if (linesCleared >= level * 10) {
+      sound.gameWon();
       level++;
       dropSpeed = max(50, dropSpeed - 50);
     }

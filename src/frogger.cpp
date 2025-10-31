@@ -1,6 +1,7 @@
 #include "frogger.h"
 #include "display.h"
 #include "input.h"
+#include "sound.h"
 
 FroggerGame froggerGame;
 
@@ -51,6 +52,7 @@ void FroggerGame::update() {
     if (lives <= 0) {
       gameOver = true;
     } else {
+      sound.explosion();
       resetFrog();
     }
   }
@@ -62,6 +64,7 @@ void FroggerGame::update() {
       score += 50;
       highestY = frog.y;
     }
+    sound.gameWon();
     resetFrog();
   }
 }
@@ -80,17 +83,21 @@ void FroggerGame::draw() {
 
 void FroggerGame::handleInput() {
   if (buttons.upPressed && frog.y > 0) {
+    sound.move();
     frog.y -= LANE_HEIGHT;
     frog.onLog = false;
   }
   else if (buttons.downPressed && frog.y < SCREEN_HEIGHT - FROG_SIZE) {
+    sound.move();
     frog.y += LANE_HEIGHT;
     frog.onLog = false;
   }
   else if (buttons.leftPressed && frog.x > 0) {
+    sound.move();
     frog.x -= FROG_SIZE;
   }
   else if (buttons.rightPressed && frog.x < SCREEN_WIDTH - FROG_SIZE) {
+    sound.move();
     frog.x += FROG_SIZE;
   }
 }
