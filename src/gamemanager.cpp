@@ -308,8 +308,9 @@ void GameManager::showGameOver() {
     drawCenteredText("NEW HIGHSCORE!", 37, 1);
   }
   
-  drawCenteredText("UP: Menu", 47, 1);
-  drawCenteredText("RIGHT: Restart", 57, 1);
+  //drawCenteredText("UP: Menu", 47, 1);
+  drawCenteredText(" LEFT: Menu   ", 45, 1);
+  drawCenteredText("RIGHT: Restart", 55, 1);
   
   updateDisplay();
 }
@@ -354,14 +355,15 @@ void GameManager::showGameWon() {
     drawCenteredText("NEW HIGHSCORE!", 37, 1);
   }
   
-  drawCenteredText("UP: Menu", 47, 1);
-  drawCenteredText("RIGHT: Play Again", 57, 1);
+  //drawCenteredText("UP: Menu", 47, 1);
+  drawCenteredText(" LEFT: Menu      ", 45, 1);
+  drawCenteredText("RIGHT: Play Again", 55, 1);
   
   updateDisplay();
 }
 
 void GameManager::handleGameOverInput() {
-  if (buttons.upPressed) {
+  if (buttons.leftPressed) {
     setState(STATE_MENU);
   }
   else if (buttons.rightPressed) {
@@ -370,7 +372,7 @@ void GameManager::handleGameOverInput() {
 }
 
 void GameManager::handleGameWonInput() {
-  if (buttons.upPressed) {
+  if (buttons.leftPressed) {
     setState(STATE_MENU);
   }
   else if (buttons.rightPressed) {
